@@ -2,6 +2,7 @@ package org.tiago.dscatalog.services;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,12 @@ public class CategoryService {
 	public List<CategoryDTO> findAll(){
 		List<Category> listCategories = repository.findAll();
 		
-		return listCategories.stream().map(x -> new CategoryDTO(x.getId(), x.getName()))
+		return listCategories.stream().map(CategoryDTO::new)
 				.collect(Collectors.toList());
+	}
+	
+	@Transactional(readOnly = true)
+	public Optional<CategoryDTO> findById(Long id) {
+		return repository.findById(id).map(CategoryDTO::new);
 	}
 }
