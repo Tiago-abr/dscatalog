@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tiago.dscatalog.dto.CategoryDTO;
-
+import org.tiago.dscatalog.exceptions.EntityNotFoundException;
 import org.tiago.dscatalog.services.CategoryService;
 
 @RestController
@@ -29,6 +29,6 @@ public class CategoryController {
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
 		return service.findById(id)
 				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+				.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 	}
 }
