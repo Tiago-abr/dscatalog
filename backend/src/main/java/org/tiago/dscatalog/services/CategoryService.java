@@ -31,4 +31,12 @@ public class CategoryService {
 	public Optional<CategoryDTO> findById(Long id) {
 		return repository.findById(id).map(CategoryDTO::new);
 	}
+	
+	@Transactional
+	public CategoryDTO insert(CategoryDTO categoryDTO) {
+		Category category = new Category();
+		category.setName(categoryDTO.name());
+		category = repository.save(category);
+		return new CategoryDTO(category);
+	}
 }
