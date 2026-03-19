@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tiago.dscatalog.dto.CategoryDTO;
 import org.tiago.dscatalog.entities.Category;
+import org.tiago.dscatalog.exceptions.ResourceNotFoundException;
 import org.tiago.dscatalog.repositories.CategoryRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 
 @Service
@@ -38,5 +41,17 @@ public class CategoryService {
 		category.setName(categoryDTO.name());
 		category = repository.save(category);
 		return new CategoryDTO(category);
+	}
+	
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
+		try {
+			Category category = repository.getReferenceById(id);
+			category.setName(categoryDTO.name());
+			category = repository.save(category);
+			return new CategoryDTO(category);
+		}catch(EntityNotFoundException exception){
+			throw new ResourceNotFoundException("Id not found: "+ id);
+		}
 	}
 }
