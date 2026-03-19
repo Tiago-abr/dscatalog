@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.tiago.dscatalog.dto.CategoryDTO;
-import org.tiago.dscatalog.exceptions.ResourceNotFoundException;
 import org.tiago.dscatalog.services.CategoryService;
 
 @RestController
@@ -32,9 +31,8 @@ public class CategoryController {
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
-		return service.findById(id)
-				.map(ResponseEntity::ok)
-				.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		CategoryDTO categoryDTO = service.findById(id);
+		return ResponseEntity.ok(categoryDTO);
 	}
 	
 	@PostMapping

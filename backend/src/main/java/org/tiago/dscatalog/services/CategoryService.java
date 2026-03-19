@@ -2,7 +2,6 @@ package org.tiago.dscatalog.services;
 
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,8 @@ public class CategoryService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Optional<CategoryDTO> findById(Long id) {
-		return repository.findById(id).map(CategoryDTO::new);
+	public CategoryDTO findById(Long id) {
+		return repository.findById(id).map(CategoryDTO::new).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 	}
 	
 	@Transactional
