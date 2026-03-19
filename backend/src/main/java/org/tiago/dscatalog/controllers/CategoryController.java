@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.tiago.dscatalog.dto.CategoryDTO;
-import org.tiago.dscatalog.exceptions.EntityNotFoundException;
+import org.tiago.dscatalog.exceptions.ResourceNotFoundException;
 import org.tiago.dscatalog.services.CategoryService;
 
 @RestController
@@ -33,7 +34,7 @@ public class CategoryController {
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
 		return service.findById(id)
 				.map(ResponseEntity::ok)
-				.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 	}
 	
 	@PostMapping
@@ -42,5 +43,11 @@ public class CategoryController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(categoryDTO.id()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
+		categoryDTO = service.update(id, categoryDTO);
+		return ResponseEntity.ok(categoryDTO);
 	}
 }
