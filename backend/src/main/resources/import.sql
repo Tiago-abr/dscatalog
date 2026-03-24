@@ -1,7 +1,7 @@
-INSERT INTO tb_category(name) VALUES('Books');
-INSERT INTO tb_category(name) VALUES('Electronics');
-INSERT INTO tb_category(name) VALUES('Games');
-INSERT INTO tb_category(name) VALUES('Computers');
-INSERT INTO tb_category(name) VALUES('Sports & Outdoors');
-INSERT INTO tb_category(name) VALUES('Cell Phones & Accessories');
+INSERT INTO tb_category(name, created_At) VALUES('Books', NOW());
+INSERT INTO tb_category(name, created_At) VALUES('Electronics', NOW());
+INSERT INTO tb_category(name, created_At) VALUES('Games', NOW());
+INSERT INTO tb_category(name, created_At) VALUES('Computers', NOW());
+INSERT INTO tb_category(name, created_At) VALUES('Sports & Outdoors', NOW());
+INSERT INTO tb_category(name, created_At) VALUES('Cell Phones & Accessories', NOW());
 
