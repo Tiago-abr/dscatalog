@@ -1,14 +1,17 @@
 package org.tiago.dscatalog.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tiago.dscatalog.dto.CategoryDTO;
 import org.tiago.dscatalog.dto.ProductDTO;
 import org.tiago.dscatalog.entities.Category;
 import org.tiago.dscatalog.entities.Product;
+import org.tiago.dscatalog.exceptions.DatabaseException;
 import org.tiago.dscatalog.exceptions.ResourceNotFoundException;
 import org.tiago.dscatalog.repositories.CategoryRepository;
 import org.tiago.dscatalog.repositories.ProductRepository;
@@ -53,6 +56,19 @@ public class ProductService {
 			return new ProductDTO(product);
 		}catch(EntityNotFoundException exception){
 			throw new ResourceNotFoundException("Id not found: "+ id);
+		}
+	}
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public void delete(Long id) {
+		if(!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Resource not found");
+		}
+		
+		try {
+			repository.deleteById(id);
+		}catch(DataIntegrityViolationException exception) {
+			throw new DatabaseException("Referential integrity violation");
 		}
 	}
 	
