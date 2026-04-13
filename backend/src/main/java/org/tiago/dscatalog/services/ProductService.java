@@ -13,6 +13,8 @@ import org.tiago.dscatalog.exceptions.ResourceNotFoundException;
 import org.tiago.dscatalog.repositories.CategoryRepository;
 import org.tiago.dscatalog.repositories.ProductRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ProductService {
 	
@@ -40,6 +42,18 @@ public class ProductService {
 		copyDtoToEntity(productDTO, product);
 		product = repository.save(product);
 		return new ProductDTO(product);
+	}
+	
+	@Transactional
+	public ProductDTO update(Long id, ProductDTO productDTO) {
+		try {
+			Product product = repository.getReferenceById(id);
+			copyDtoToEntity(productDTO, product);
+			product =  repository.save(product);
+			return new ProductDTO(product);
+		}catch(EntityNotFoundException exception){
+			throw new ResourceNotFoundException("Id not found: "+ id);
+		}
 	}
 	
 	private void copyDtoToEntity(ProductDTO dto, Product product) {
