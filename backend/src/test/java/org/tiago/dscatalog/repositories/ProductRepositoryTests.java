@@ -1,5 +1,7 @@
 package org.tiago.dscatalog.repositories;
 
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.tiago.dscatalog.entities.Product;
+import org.tiago.dscatalog.factory.ProductFactory;
 
 @DataJpaTest
 public class ProductRepositoryTests {
@@ -17,11 +20,12 @@ public class ProductRepositoryTests {
 	
 	private Long validId;
 	private Long invalidId;
-	
+	private Long countTotalProducts;
 	@BeforeEach
 	void setUp() throws Exception {
 		this.validId = 1L;
 		this.invalidId = 1000L;
+		this.countTotalProducts = 25L;
 	}
 	
 	@Test
@@ -34,6 +38,17 @@ public class ProductRepositoryTests {
 	
 	@Test
 	public void deleteShouldDoNothingWhenIdDoesNotExist() {
-	    repository.deleteById(this.invalidId);
+	    this.repository.deleteById(this.invalidId);
+	}
+	
+	@Test
+	public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
+		Product product = ProductFactory.createProduct();
+		product.setId(null);
+		
+		product = this.repository.save(product);
+		
+		Assertions.assertNotNull(product.getId());
+		Assertions.assertEquals(this.countTotalProducts + 1, product.getId());
 	}
 }
