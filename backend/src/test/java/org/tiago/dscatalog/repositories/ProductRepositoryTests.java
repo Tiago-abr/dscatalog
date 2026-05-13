@@ -1,7 +1,5 @@
 package org.tiago.dscatalog.repositories;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +19,7 @@ public class ProductRepositoryTests {
 	private Long validId;
 	private Long invalidId;
 	private Long countTotalProducts;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		this.validId = 1L;
@@ -50,5 +49,19 @@ public class ProductRepositoryTests {
 		
 		Assertions.assertNotNull(product.getId());
 		Assertions.assertEquals(this.countTotalProducts + 1, product.getId());
+	}
+	
+	@Test
+	public void findByIdShouldReturnProductWhenIdExists() {
+		Optional<Product> product = this.repository.findById(this.validId);
+		
+		Assertions.assertTrue(product.isPresent());
+	}
+	
+	@Test
+	public void findByIdShouldReturnEmptyOptionalWhenIdDoesNotExist() {
+		Optional<Product> product = this.repository.findById(this.invalidId);
+		
+		Assertions.assertTrue(product.isEmpty());
 	}
 }
